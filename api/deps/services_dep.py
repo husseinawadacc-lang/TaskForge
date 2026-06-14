@@ -16,11 +16,14 @@ API → Depends → Service → Storage → DB
 """
 
 from fastapi import Depends
+from modules.billing.service.billing_service import BillingService
 
 # ==========================================================
 # STORAGE
 # ==========================================================
 
+from modules.billing.depends.dependencies import get_billing_service
+from modules.notifications.dependencies import get_notification_service
 from storage.base_st import BaseStorage
 from storage.st_factory import get_storage
 
@@ -35,29 +38,12 @@ from services.audit_service import AuditService
 # BUSINESS SERVICES
 # ==========================================================
 
-from services.task_service import TaskService
-from services.project_service import ProjectService
 from services.token_services import TokenService
 from services.auth_service import AuthService
 from services.password_reset_services import PasswordResetService
-from services.project_service import ProjectService
-from services.ai_service import AIService
-
-# ==========================================================
-# UnitOfWork
-# ==========================================================
-
-def get_unit_of_work() -> UnitOfWork:
-    """
-    Provide UnitOfWork instance.
-
-    Responsibilities:
-    - Open DB session
-    - Handle commit/rollback
-    - Ensure transaction integrity
-    """
-    return UnitOfWork()
-
+from modules.notifications.service.notification_service import NotificationService
+from api.deps.audit_dep import get_audit_service
+from api.deps.uow_dep import get_unit_of_work
 
 # ==========================================================
 # Password Policy
@@ -72,69 +58,8 @@ def get_password_policy_service() -> PasswordPolicyService:
     """
     return PasswordPolicyService()
 
-# ========================================================
-# audit service
-# ========================================================
-
-def get_audit_service(
-    storage = Depends(get_storage),
-
-) -> AuditService:
-    return AuditService(
-        storage=storage,
-            )
 
 
-# ==========================================================
-# ProjectService 🔥 NEW
-# ==========================================================
-
-def get_project_service(
-    storage: BaseStorage = Depends(get_storage),
-    uow: UnitOfWork = Depends(get_unit_of_work),
-    audit_service:AuditService = Depends(get_audit_service)
-) -> ProjectService:
-    """
-    ProjectService dependency.
-
-    Handles:
-    - Project creation
-    - Ownership isolation
-    - SaaS structure
-    """
-
-    return ProjectService(
-        storage=storage,
-        uow=uow,
-        audit_service=audit_service,
-    )
-
-# ==========================================================
-# TaskService
-# ==========================================================
-
-def get_task_service(
-    storage: BaseStorage = Depends(get_storage),
-    uow: UnitOfWork = Depends(get_unit_of_work),
-    project_service:ProjectService= Depends(get_project_service),
-    audit_service:AuditService = Depends(get_audit_service)
-) -> TaskService:
-    """
-    TaskService dependency.
-
-    Handles:
-    - Task CRUD
-    - Business rules
-    - Security (ownership)
-    - AI priority
-    """
-
-    return TaskService(
-        storage=storage,
-        uow=uow,
-        project_service=project_service,
-        audit_service=audit_service,
-    )
 
 
 # ==========================================================
@@ -169,6 +94,7 @@ def get_auth_service(
     policy: PasswordPolicyService = Depends(get_password_policy_service),
     uow: UnitOfWork = Depends(get_unit_of_work),
     token_service: TokenService = Depends(get_token_service),
+    billing_service: BillingService = Depends(get_billing_service),
 ) -> AuthService:
     """
     AuthService dependency.
@@ -184,6 +110,7 @@ def get_auth_service(
         password_policy=policy,
         uow=uow,
         token_service=token_service,
+        billing_service=billing_service,
     )
 
 
@@ -210,14 +137,3 @@ def get_password_reset_service(
         password_policy=policy,
         uow=uow,
     )
-
-def get_ai_service() -> AIService:
-    """
-    Provide AIService instance
-
-    🔥 لاحقًا:
-    - ممكن نحقن OpenAI client
-    - أو config
-    - أو caching layer
-    """
-    return AIService()

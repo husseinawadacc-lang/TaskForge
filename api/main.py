@@ -1,6 +1,5 @@
 from fastapi import FastAPI
 from contextlib import asynccontextmanager
-
 from api.v1.router import api_router
 from api.middleware.request_logger import RequestLoggingMiddleware
 from api.middleware.global_rate_limiting import GlobalRateLimitMiddleware
@@ -8,7 +7,9 @@ from fastapi.middleware.cors import CORSMiddleware
 from api.middleware.request_id import RequestIDMiddleware
 from db.init_db import init_db
 from core.cache.redis_client import check_redis_connection
-
+from modules.notifications.api.routes import router as notifications_router
+from modules.billing.api.routes import router as billing_router
+from modules.billing.api.webhook import router as billing_webhooks_router
 # Exception handlers
 from api.exceptions import *
 from utils.exceptions import *
@@ -44,7 +45,7 @@ app = FastAPI(
 # 1️⃣ CORS
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:5173"],
+    allow_origins=["http://localhost:3000"],  # Frontend URL
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
@@ -87,3 +88,6 @@ app.add_exception_handler(Exception, unhandled_exception_handler)
 # Routers
 # =====================================================
 app.include_router(api_router, prefix="/api/v1")
+app.include_router(notifications_router, prefix="/api/v1")
+app.include_router(billing_router, prefix="/api/v1")
+app.include_router(billing_webhooks_router)

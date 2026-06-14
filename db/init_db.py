@@ -9,7 +9,8 @@ from db.models import task
 from db.models import refresh_token
 from db.models import password_reset
 from db.models.project import ProjectORM
-
+from db.models.notification import NotificationORM
+from db.models.plan import PlanORM
 def init_db():
     """
     Initialize database tables.

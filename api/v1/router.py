@@ -1,5 +1,8 @@
 from fastapi import APIRouter
-from api.v1.routes import auth,tasks,project,health,ai
+from api.v1.routes import auth,health
+from modules.ai.api import ai
+from modules.tasks.api import tasks
+from modules.project.api import project
 
 api_router = APIRouter()
 api_router.include_router(auth.router)

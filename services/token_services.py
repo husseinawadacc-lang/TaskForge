@@ -198,7 +198,7 @@ class TokenService:
                 raise AuthenticationError("invalid refresh token")
             
             # 4️⃣ Enforce expiration
-            if record.expires_at < datetime.now(timezone.utc):
+            if record.expires_at < datetime.utcnow():
                 raise AuthenticationError("invalid refresh token")
             
 

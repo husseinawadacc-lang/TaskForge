@@ -35,6 +35,13 @@ class Settings(BaseSettings):
     # =========================
 
     DATABASE_URL:str 
+
+    # =========================
+    # 💳 Stripe
+    # =========================
+    STRIPE_SECRET_KEY: str
+    STRIPE_WEBHOOK_SECRET: str
+
     
     # =========================
     # 📁 Load from .env

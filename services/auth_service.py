@@ -1,10 +1,12 @@
 from core.enums.role import UserRole
 from domain.user import User
+from modules.billing.service.billing_service import BillingService
 from storage.base_st import BaseStorage
 from core.auth.password import (hash_password, verify_password,)
 from services.password_policy_service import PasswordPolicyService
 from services.unit_of_work import UnitOfWork
 from services.token_services import TokenService
+
 from utils.exceptions import (
     ConflictError,
     AuthenticationError,
@@ -38,11 +40,13 @@ class AuthService:
         password_policy: PasswordPolicyService,
         uow: UnitOfWork,
         token_service:TokenService,
+        billing_service:BillingService,
     ):
         self.storage = storage
         self.password_policy = password_policy
         self.uow = uow
         self.token_service=token_service
+        self.billing_service=billing_service
     # =====================================================
     # REGISTER
     # =====================================================
@@ -120,16 +124,25 @@ class AuthService:
             # Commit is handled by UnitOfWork.
             # ==================================================
 
-            user= self.storage.create_user(
-                session=session,user=user
+            created_user = self.storage.create_user(
+                session=session, user=user
+            )
+
+            if created_user.id is None:
+                raise RuntimeError("Created user has no id")
+
+            self.billing_service.create_free_subscription(
+                session=session,
+                user_id=created_user.id,
             )
 
             logger.info(
                 "User registered",
-                extra={"user_id": user.id} )
+                extra={"user_id": created_user.id},
+            )
 
 
-            return user
+            return created_user
 
     # =====================================================
     # LOGIN

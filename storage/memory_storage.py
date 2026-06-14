@@ -1,3 +1,4 @@
+from abc import abstractmethod
 from datetime import datetime,timezone
 from typing import Dict, List
 from storage.base_st import (
@@ -8,6 +9,8 @@ from domain.user import User
 from domain.task import Task
 from domain.project import Project
 from domain.audit_log import AuditLog
+from modules.notifications.domain.models import Notification    
+from modules.billing.domain.models import Subscription
 from utils.exceptions import NotFoundError
 import copy
 
@@ -37,6 +40,7 @@ class MemoryStorage(BaseStorage):
         self._projects:Dict[int,Project]= {}
         self._project_members:Dict[int,Dict[int,str]]={}
         self._audit_logs: Dict[int,AuditLog]={}
+        self._notifications: Dict[int, Notification] = {}
         # auto increment counters (simulate database sequences)
         self._user_id_seq = 1
         self._task_id_seq = 1
@@ -44,6 +48,7 @@ class MemoryStorage(BaseStorage):
         self._refresh_token_id_seq = 1
         self._project_id_seq =1
         self._audit_id_logs =1
+        self._id_counter = 1
     # ======================================================
     # User operations
     # ======================================================
@@ -503,3 +508,107 @@ class MemoryStorage(BaseStorage):
         self._audit_logs[log.id] = log
 
         return log
+    
+    # ==========================================================
+    # NOTIFICATIONS
+    # ==========================================================
+
+    def create_notification(
+        self,
+        *,
+        session,
+        notification: Notification
+    ) -> Notification:
+
+        notification.id = self._id_counter
+        self._id_counter += 1
+
+        notification.created_at = datetime.now(timezone.utc)
+
+        self.notifications.append(notification)
+
+        return notification
+
+    # ----------------------------------------------------------
+
+    def get_notifications_by_user(
+        self,
+        *,
+        session,
+        user_id: int
+    ) -> List[Notification]:
+
+        return [
+            n for n in self.notifications
+            if n.user_id == user_id
+        ]
+
+    # ----------------------------------------------------------
+
+    def mark_notification_as_read(
+        self,
+        *,
+        session,
+        notification_id: int,
+        user_id: int
+    ) -> bool:
+
+        for n in self.notifications:
+            if n.id == notification_id and n.user_id == user_id:
+
+                if n.is_read:
+                    return False
+
+                n.is_read = True
+                return True
+
+        raise NotFoundError("Notification not found")
+
+    # ----------------------------------------------------------
+
+    def get_unread_notifications_count(
+        self,
+        *,
+        session,
+        user_id: int
+    ) -> int:
+
+        return sum(
+            1 for n in self.notifications
+            if n.user_id == user_id and not n.is_read
+        )
+    
+    # ==========================================================
+    # BILLING
+    # ==========================================================
+
+    @abstractmethod
+    def create_subscription(
+        self,
+        *,
+        session,
+        subscription: Subscription
+    ) -> Subscription:
+        """
+        Persist new subscription.
+
+        Must:
+        - assign ID
+        - set start_date if missing
+
+        Returns created Subscription.
+        """
+
+
+    @abstractmethod
+    def get_active_subscription(
+        self,
+        *,
+        session,
+        user_id: int
+    ) -> Subscription:
+        """
+        Retrieve active subscription for user.
+
+        Raises NotFoundError if none exists.
+        """

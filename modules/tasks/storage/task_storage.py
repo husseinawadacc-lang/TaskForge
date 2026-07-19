@@ -1,10 +1,10 @@
 from typing import List
-from utils.exceptions import NotFoundError,ConflictError
+from core.exceptions import NotFoundError,ConflictError
 
 from sqlalchemy import select, func
 from sqlalchemy.orm import Session
 
-from domain.task import Task
+from modules.tasks.domain.task import Task
 from db.models.task import TaskORM
 
 class TaskStorage:

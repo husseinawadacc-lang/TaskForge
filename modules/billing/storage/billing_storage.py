@@ -1,10 +1,9 @@
 
 from datetime import datetime,timezone
 from sqlalchemy import select, func
-from sqlalchemy.orm import Session
 from modules.billing.domain.models import Subscription
 from db.models.subscription import SubscriptionORM
-from utils.exceptions import NotFoundError
+from core.exceptions import NotFoundError
 
 
 class BillingStorage:

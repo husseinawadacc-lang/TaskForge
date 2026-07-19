@@ -7,13 +7,11 @@ from fastapi.middleware.cors import CORSMiddleware
 from api.middleware.request_id import RequestIDMiddleware
 from db.init_db import init_db
 from core.cache.redis_client import check_redis_connection
-from modules.notifications.api.routes import router as notifications_router
-from modules.billing.api.routes import router as billing_router
-from modules.billing.api.webhook import router as billing_webhooks_router
+from modules.notifications.api.notification import router as notifications_router
 # Exception handlers
 from api.exceptions import *
-from utils.exceptions import *
-
+from core.exceptions import *
+from modules.billing.api import webhook
 
 # =====================================================
 # Lifespan
@@ -88,6 +86,3 @@ app.add_exception_handler(Exception, unhandled_exception_handler)
 # Routers
 # =====================================================
 app.include_router(api_router, prefix="/api/v1")
-app.include_router(notifications_router, prefix="/api/v1")
-app.include_router(billing_router, prefix="/api/v1")
-app.include_router(billing_webhooks_router)

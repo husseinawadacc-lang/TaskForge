@@ -4,11 +4,10 @@ from modules.billing.service.billing_service import BillingService
 # ==========================================================
 # STORAGE
 # ==========================================================
-from storage.sqlalchemy_storage import BaseStorage
 from modules.billing.depends.dependencies import get_billing_service
 from modules.project.storage.project_storage import ProjectStorage
 from modules.project.storage.project_member_storage import ProjectMemberStorage
-from storage.st_factory import get_storage
+from modules.user.storage.user_storage import UserStorage
 from modules.project.depends.storage_dependes import (
     get_project_member_storage,get_project_storage
 )
@@ -16,16 +15,15 @@ from modules.project.depends.storage_dependes import (
 # CORE SERVICES
 # ==========================================================
 
-from services.unit_of_work import UnitOfWork
-from services.audit_service import AuditService
+from core.unit_of_work import UnitOfWork
+from modules.audit.services.audit_service import AuditService
 # ==========================================================
 # BUSINESS SERVICES
 # ==========================================================
 
 from modules.project.service.project_service import ProjectService
-from api.deps.audit_dep import get_audit_service
+from modules.audit.depends.dependencies import get_audit_service
 from api.deps.uow_dep import get_unit_of_work
-from api.deps.services_dep import AuditService
 
 # ==========================================================
 # ProjectService 🔥 NEW
@@ -34,7 +32,7 @@ from api.deps.services_dep import AuditService
 def get_project_service(
     project_storage: ProjectStorage = Depends(get_project_storage),
     member_storage: ProjectMemberStorage= Depends(get_project_member_storage),
-    storage:BaseStorage=Depends(get_storage),
+    user_storage= UserStorage(),
     uow: UnitOfWork = Depends(get_unit_of_work),
     audit_service:AuditService = Depends(get_audit_service),
     billing_service: BillingService = Depends(get_billing_service),
@@ -51,7 +49,7 @@ def get_project_service(
     return ProjectService(
         project_storage=project_storage,
         member_storage=member_storage,
-        storage = storage,
+        user_storage = user_storage,
         uow=uow,
         audit_service=audit_service,
         billing_service=billing_service,

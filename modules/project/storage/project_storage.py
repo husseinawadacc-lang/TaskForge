@@ -2,12 +2,12 @@ from datetime import datetime,timezone
 from typing import List,Dict
 from sqlalchemy import select, func
 from sqlalchemy.orm import Session
-from domain.project import Project
+from modules.project.domain.project import Project
 from db.models.project import ProjectORM
 from db.models.task import TaskORM
 from db .models.project_member import ProjectMemberORM
 from sqlalchemy.exc import IntegrityError
-from utils.exceptions import NotFoundError,ConflictError
+from core.exceptions import NotFoundError,ConflictError
 
 class ProjectStorage:
     # ==========================================================

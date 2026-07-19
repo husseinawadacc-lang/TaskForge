@@ -7,7 +7,7 @@ from modules.ai.schemas.ai import (AnalyzeTaskRequest, AnalyzeTaskResponse,
 
 from modules.tasks.service.task_service import TaskService
 from modules.tasks.depends.dependencies import get_task_service
-from api.deps.auth_dep import get_current_user_id
+from modules.auth.depends.auth_dependencies import get_current_user_id
 
 router = APIRouter(prefix="/ai", tags=["AI"])
 

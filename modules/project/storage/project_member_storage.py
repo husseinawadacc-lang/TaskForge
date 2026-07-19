@@ -1,7 +1,7 @@
 from sqlalchemy import select, func
 from db .models.project_member import ProjectMemberORM
 from sqlalchemy.exc import IntegrityError
-from utils.exceptions import NotFoundError,ConflictError
+from core.exceptions import NotFoundError,ConflictError
 
 class ProjectMemberStorage:
 # ==========================================================

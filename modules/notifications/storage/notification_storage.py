@@ -6,7 +6,7 @@ from modules.notifications.domain.models import Notification
 
 from db.models.notification import NotificationORM
 
-from utils.exceptions import NotFoundError
+from core.exceptions import NotFoundError
 
 
 class NotificationStorage:

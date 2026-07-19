@@ -2,7 +2,7 @@ import uuid
 from starlette.middleware.base import BaseHTTPMiddleware
 from fastapi import Request
 
-from utils.request_context import request_id_ctx
+from core.request_context import request_id_ctx
 
 
 class RequestIDMiddleware(BaseHTTPMiddleware):

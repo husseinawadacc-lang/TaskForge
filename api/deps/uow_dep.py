@@ -1,4 +1,4 @@
-from services.unit_of_work import UnitOfWork
+from core.unit_of_work import UnitOfWork
 
 def get_unit_of_work() -> UnitOfWork:
     """

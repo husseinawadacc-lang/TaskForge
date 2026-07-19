@@ -1,7 +1,7 @@
 import time
 import uuid
 from starlette.middleware.base import BaseHTTPMiddleware
-from utils.logger import get_logger
+from core.logger import get_logger
 
 logger = get_logger("request")
 

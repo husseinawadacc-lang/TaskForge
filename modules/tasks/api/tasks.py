@@ -7,13 +7,13 @@ from modules.tasks.schemas.task import (
     TaskResponse,
     TaskListResponse,
 )
-from api.deps.auth_dep import get_current_user
+from modules.auth.depends.auth_dependencies import get_current_user
 from modules.tasks.depends.dependencies import get_task_service
 from api.deps.permissions_dep import require_permission
 
 from core.enums.permission import Permission
 
-from domain.user import User
+from modules.user.domain.user import User
 
 
 router = APIRouter(prefix="/tasks", tags=["TASKS"])

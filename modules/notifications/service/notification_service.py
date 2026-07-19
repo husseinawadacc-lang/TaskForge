@@ -1,8 +1,8 @@
 from modules.notifications.domain.models import Notification
 from modules.notifications.domain.enums import NotificationType
 from modules.notifications.storage.notification_storage import NotificationStorage
-from services.audit_service import AuditService
-from services.unit_of_work import UnitOfWork
+from modules.audit.services.audit_service import AuditService
+from core.unit_of_work import UnitOfWork
 
 
 class NotificationService:

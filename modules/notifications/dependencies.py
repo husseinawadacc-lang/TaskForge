@@ -2,10 +2,10 @@ from fastapi import Depends
 
 from modules.notifications.storage.notification_storage import NotificationStorage
 
-from services.audit_service import AuditService
-from api.deps.audit_dep import get_audit_service
+from modules.audit.services.audit_service import AuditService
+from modules.audit.depends.dependencies import get_audit_service
 from api.deps.uow_dep import get_unit_of_work
-from services.unit_of_work import UnitOfWork
+from core.unit_of_work import UnitOfWork
 from modules.notifications.service.notification_service import NotificationService
 
 

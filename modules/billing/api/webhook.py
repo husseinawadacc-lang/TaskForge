@@ -2,7 +2,7 @@ import stripe
 from fastapi import Depends, Request, HTTPException, APIRouter
 
 from core.config import get_settings
-from api.deps.services_dep import get_unit_of_work
+from api.deps.uow_dep import get_unit_of_work
 from modules.billing.depends.dependencies import get_billing_service
 import traceback
 settings = get_settings()

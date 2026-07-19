@@ -1,5 +1,5 @@
 from modules.billing.storage.billing_storage import BillingStorage
-from services.unit_of_work import UnitOfWork
+from core.unit_of_work import UnitOfWork
 from modules.billing.service.billing_service import BillingService
 
 

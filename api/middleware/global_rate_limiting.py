@@ -2,8 +2,8 @@ from starlette.middleware.base import BaseHTTPMiddleware
 from fastapi import Request
 
 from core.security.rate_limiter import global_rate_limiter
-from utils.exceptions import RateLimitError
-from utils.logger import get_logger
+from core.exceptions import RateLimitError
+from core.logger import get_logger
 
 logger = get_logger(__name__)
 

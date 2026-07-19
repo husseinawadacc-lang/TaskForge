@@ -1,7 +1,7 @@
 from fastapi import Request, status
 from fastapi.responses import JSONResponse
 
-from utils.exceptions import (
+from core.exceptions import (
     ValidationError,
     ConflictError,
     AuthenticationError,
@@ -16,7 +16,7 @@ from utils.exceptions import (
     RateLimitError,
 )
 
-from utils.logger import get_logger
+from core.logger import get_logger
 
 """
 Global Exception Handlers (Production Version)

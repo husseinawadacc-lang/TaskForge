@@ -5,7 +5,7 @@ from datetime import datetime, timedelta
 from core.config import get_settings
 import stripe
 from modules.billing.storage.billing_storage import BillingStorage
-from services.unit_of_work import UnitOfWork
+from core.unit_of_work import UnitOfWork
 
 settings = get_settings()
 

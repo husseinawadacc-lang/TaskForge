@@ -8,8 +8,8 @@ from modules.tasks.depends.storage_dependes import get_task_storage
 # CORE SERVICES
 # ==========================================================
 
-from services.unit_of_work import UnitOfWork
-from services.audit_service import AuditService
+from core.unit_of_work import UnitOfWork
+from modules.audit.services.audit_service import AuditService
 # ==========================================================
 # BUSINESS SERVICES
 # ==========================================================
@@ -17,9 +17,9 @@ from services.audit_service import AuditService
 from modules.tasks.service.task_service import TaskService
 from modules.project.service.project_service import ProjectService
 from modules.notifications.service.notification_service import NotificationService
-from api.deps.audit_dep import get_audit_service
+from modules.audit.depends.dependencies import get_audit_service
 from api.deps.uow_dep import get_unit_of_work
-from api.deps.services_dep import  get_notification_service
+from modules.notifications.dependencies import  get_notification_service
 from modules.project.depends.dependencies import get_project_service
 
 # ==========================================================

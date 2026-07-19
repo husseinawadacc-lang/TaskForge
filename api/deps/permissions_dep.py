@@ -1,6 +1,6 @@
 from fastapi import Depends, HTTPException, status
-from domain.user import User
-from api.deps.auth_dep import get_current_user
+from modules.user.domain.user import User
+from modules.auth.depends.auth_dependencies import get_current_user
 from core.enums.permission import Permission
 from core.security.authorization_service import AuthorizationService
 

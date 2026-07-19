@@ -3,15 +3,14 @@
 # ==========================================
 
 from typing import List
-from storage.sqlalchemy_storage import BaseStorage
-from domain.project import Project
-# from modules.billing.domain import plans
+from modules.project.domain.project import Project
+from modules.user.storage.user_storage import UserStorage 
 from modules.billing.service.billing_service import BillingService
 from modules.project.storage.project_storage import ProjectStorage
 from modules.project.storage.project_member_storage import ProjectMemberStorage
-from services.unit_of_work import UnitOfWork
-from services.audit_service import AuditService
-from utils.exceptions import NotFoundError,PermissionDeniedError
+from core.unit_of_work import UnitOfWork
+from modules.audit.services.audit_service import AuditService
+from core.exceptions import NotFoundError,PermissionDeniedError
 
 
 class ProjectService:
@@ -37,12 +36,12 @@ class ProjectService:
     def __init__(
             self, project_storage: ProjectStorage,
              member_storage: ProjectMemberStorage,
-             storage:BaseStorage,
+             user_storage: UserStorage,
               uow: UnitOfWork,
             audit_service:AuditService, billing_service:BillingService):
         self.project_storage = project_storage
         self.member_storage= member_storage
-        self.storage= storage
+        self.user_storage= user_storage
         self.uow = uow
         self.audit=audit_service
         self.billing=billing_service
@@ -229,7 +228,7 @@ class ProjectService:
                 raise NotFoundError("Project not found")
 
             # 🔍 ensure user exists
-            self.storage.get_user_by_id(
+            self.user_storage.get_user_by_id(
                 session=session,
                 user_id=user_id,
             )

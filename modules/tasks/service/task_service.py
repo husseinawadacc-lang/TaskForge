@@ -3,14 +3,14 @@
 # ==========================================
 
 from typing import Tuple, List
-from domain.task import Task
+from modules.tasks.domain.task import Task
 from modules.tasks.storage.task_storage import TaskStorage
-from services.unit_of_work import UnitOfWork
+from core.unit_of_work import UnitOfWork
 from modules.ai.service.ai_service import AIService
 from modules.project.service.project_service import ProjectService
-from services.audit_service import AuditService
-from utils.logger import get_logger
-from utils.exceptions import (
+from modules.audit.services.audit_service import AuditService
+from core.logger import get_logger
+from core.exceptions import (
     TaskNotFoundError,
     InvalidPaginationError,
     NotFoundError,)
